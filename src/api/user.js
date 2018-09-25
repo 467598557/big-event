@@ -23,3 +23,7 @@ export async function login(data) {
 export async function getUserInfo() {
     return GET("/user/getUserInfo");
 }
+
+export async function logout() {
+    return GET("/user/logout");
+}

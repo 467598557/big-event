@@ -2,6 +2,11 @@
     <div class="app-view-manager">
         <header class="app-view-manager-header">
             后台管理系统
+            <el-dropdown v-if="user" >
+                <span class="el-dropdown-link">
+                    {{user.name}}<a class="logout-btn" @click="logout" href="javascript:void(0)" >登出</a>
+                </span>
+            </el-dropdown>
         </header>
         <div class="app-view-manager-body">
             <aside class="app-view-manager-body-aside" :class="{'simple-mode':isCollapse}">
@@ -34,6 +39,7 @@
 
 <script type="text/javascript" >
     import {UserType} from 'src/config/index';
+    import {logout} from 'src/api/user';
 
     export default  {
         name: "AppViewManager",
@@ -41,6 +47,11 @@
             return {
                 isCollapse: false,
                 curActiveMenuIndex: "1"
+            }
+        },
+        computed: {
+            user() {
+                return this.$store.state.user.user;
             }
         },
         async mounted() {
@@ -70,6 +81,10 @@
                         this.$router.push("/manager/config");
                         break;
                 }
+            },
+            async logout() {
+                await logout();
+                this.$router.replace("/login");
             }
         }
     }
@@ -88,6 +103,15 @@
             color: #fff;
             font-size: 20px;
             text-indent: 15px;
+            .logout-btn {
+                margin-left: 10px;
+                color: #fff;
+            }
+            .el-dropdown {
+                float: right;
+                margin-right: 15px;
+                color: rgba(255, 255, 255, 0.8);
+            }
         }
         &-body {
             display: flex;

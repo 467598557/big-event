@@ -1,5 +1,6 @@
 <template >
     <section class="app-view-index">
+        <AppComponentHeader ></AppComponentHeader>
         <ul :style="{width:(groups.length+1)*350+'px'}">
             <li v-for="item in groups" :key="item.id" :class="{'group-isCollapse':item.status==2}">
                 <header class="group-header" :data-priority="item.priority">
@@ -42,16 +43,18 @@
     import * as GroupApi from 'src/api/group';
     import * as EventApi from 'src/api/event';
     import * as Config from 'src/config/index';
+    import AppComponentHeader from 'src/components/Header';
     import AppComponentEventInfo from 'src/components/Event/info';
     import AppComponentGroupInfo from 'src/components/Group/info';
     import AppComponentEventItem from 'src/components/Event/item';
-    
+
     export default {
         name: "AppViewIndex",
         components: {
             AppComponentGroupInfo,
             AppComponentEventInfo,
-            AppComponentEventItem
+            AppComponentEventItem,
+            AppComponentHeader
         },
         data() {
             return {
@@ -217,15 +220,19 @@
         height: 100%;
         overflow: hidden;
         overflow-x: auto;
+        display: flex;
+        flex-direction: column;
         >ul {
             overflow: hidden;
             height: 100%;
+            flex: 1;
             li {
                 float: left;
                 width: 350px;
                 height: 100%;
                 box-sizing: border-box;
                 border: 1px solid #D5D5D5;
+                border-top: 0px;
                 &.group-isCollapse {
                     width: 40px;
                     text-align: center;

@@ -1,0 +1,88 @@
+<template>
+    <section class="app-component-header">
+        <div class="app-component-header-content">
+            <el-input placeholder="请输入内容" v-model="searchText">
+                <el-button @keyup="onKeyUp" @click="onSearch" slot="append" icon="el-icon-search"></el-button>
+            </el-input>
+            <el-dropdown v-if="user"  @command="handleCommand">
+                <span class="el-dropdown-link">
+                    {{user.name}}<i class="el-icon-arrow-down el-icon--right"></i>
+                </span>
+                <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item command="personal">个人中心</el-dropdown-item>
+                <el-dropdown-item command="quit">退出</el-dropdown-item>
+                </el-dropdown-menu>
+            </el-dropdown>
+        </div>
+    </section>
+</template>
+
+<script type="text/javascript" >
+    import {logout} from 'src/api/user';
+
+    export default {
+        name: "AppComponentHeader",
+        data() {
+            return {
+                searchText: ""
+            }
+        },
+        computed: {
+            user() {
+                return this.$store.state.user.user
+            }
+        },
+        methods: {
+            async handleCommand(command) {
+                switch (command) {
+                    case "personal":
+
+                        break;
+                    case "quit":
+                        await logout();
+                        this.$router.replace("/login");
+                        break;
+                }
+            },
+            onSearch() {
+                if(!this.searchText) {
+                    this.$message.warning("输入搜索条件再搜索哦~_~");
+                    return;
+                }
+
+                this.$message("搜索条件："+this.searchText);
+            },
+            onKeyUp(e) {
+                if(e.keyCode != 13) {
+                    return;
+                }
+
+                this.onSearch();
+            }
+        }
+    }
+</script>
+
+<style type="text/css" lang="less" scoped >
+    .app-component-header {
+        width: 100%;
+        height: 60px;
+        color: hsla(0,0%,100%,0.75);
+        border-bottom: 1px solid #d5d5d5;
+        &-content {
+            width: 80%;
+            height: 100%;
+            min-width: 1024px;
+            margin: 0 auto;
+            .el-input {
+                margin-top: 10px;
+                width: 500px;
+            }
+            .el-dropdown {
+                float: right;
+                margin-top: 23px;
+                cursor: pointer;
+            }
+        }
+    }
+</style>
