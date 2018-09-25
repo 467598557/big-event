@@ -21,6 +21,8 @@
 </template>
 
 <script>
+    import {UserType} from 'src/config';
+
     export default {
         name: "AppViewLogin",
         data() {
@@ -54,14 +56,22 @@
 
                     this.logining = true;
                     let userInfo = this.ruleForm;
-                    let result = await this.$store.dispatch("Login", userInfo).catch((err)=> {
+                    let user = await this.$store.dispatch("Login", userInfo).catch((err)=> {
                         this.$message({
                             message: err ? err.retMsg : "系统内部错误",
                             type: 'error'
                         });
                     });
 
-                    this.$router.replace("/");
+                    switch(user.type) {
+                        case UserType.Admin.id:
+                        case UserType.Manager.id:
+                            this.$router.push("/manager/");
+                            break;
+                        case UserType.User.id:
+                            this.$router.push("/");
+                            break;
+                    }
                 });
             }
         }

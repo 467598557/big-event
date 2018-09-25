@@ -3,7 +3,8 @@ import {MessageBox, Message} from 'element-ui'
 
 const service = axios.create({
     baseURL: 'http://localhost:7001/',
-    timeout: 5000
+    timeout: 5000,
+    withCredentials: true
 })
 
 service.interceptors.request.use(config => {

@@ -45,6 +45,7 @@
     import AppComponentEventInfo from 'src/components/Event/info';
     import AppComponentGroupInfo from 'src/components/Group/info';
     import AppComponentEventItem from 'src/components/Event/item';
+    
     export default {
         name: "AppViewIndex",
         components: {
@@ -61,16 +62,25 @@
                 curEventInfo: null,
                 curGroupOriInfo: null,
                 curEventOriInfo: null,
-                groups: []
+                groups: [],
+                user: null
             }
         },
         async mounted() {
             let store = this.$store;
+            let userInfoResult = await store.dispatch("GetUserInfo");
+            if(!userInfoResult) {
+                this.$router.replace("/login");
+                return;
+            }
+
+            this.user = userInfoResult;
+
             const groupResult = await GroupApi.getList({
-                user: Config.TestUserId
+                user: this.user.id
             });
             const eventResult = await EventApi.getList({
-                user: Config.TestUserId
+                user: this.user.id
             });
             let groupEvents = {};
             eventResult.retData.forEach((event)=> {
@@ -92,7 +102,7 @@
                     text: "新建分组",
                     priority: 1,
                     security: 1,
-                    user: Config.TestUserId
+                    user: this.user.id
                 });
 
                 if(result.retCode === "0000") {
@@ -146,7 +156,7 @@
             async toggleGroupStatus(group) {
                 let nextStatus = group.status == 1 ? 2 : 1;
                 await GroupApi.updateStatus({
-                    user: Config.TestUserId,
+                    user: this.user.id,
                     id: group.id,
                     status: nextStatus
                 });
@@ -156,7 +166,7 @@
             async addGroupEvent(group) {
                 let result = await EventApi.add({
                     text: "新建事件",
-                    user: Config.TestUserId,
+                    user: this.user.id,
                     group: group.id
                 });
 

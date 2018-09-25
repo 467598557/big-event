@@ -29,12 +29,12 @@ const user = {
                 });
             });
         },
-        async GetUserInfo({ state }) {
+        async GetUserInfo({ state, commit }) {
             if(state.user) {
                 return state.user;
             }
 
-            return new Promise(()=> {
+            return new Promise(async (resolve, reject)=>{
                 UserApi.getUserInfo().then((result)=> {
                     processUserRequest(commit, result, resolve, reject);
                 }, (err)=> {

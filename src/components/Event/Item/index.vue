@@ -50,7 +50,7 @@
             },
             async onRemoveEvent() {
                 await EventApi.remove({
-                    user: Config.TestUserId,
+                    user: this.$store.state.user.user.id,
                     id: this.event.id
                 });
 

@@ -12,7 +12,8 @@
                     </a>
                 </div>
                 <el-menu
-                    default-active="2"
+                    :default-active="curActiveMenuIndex"
+                    @select="onMenuSelected"
                     class="el-menu-vertical-demo">
                     <el-menu-item index="1">
                         <SvgIcon icon-class="user-manager"></SvgIcon>
@@ -32,16 +33,43 @@
 </template>
 
 <script type="text/javascript" >
+    import {UserType} from 'src/config/index';
+
     export default  {
         name: "AppViewManager",
         data() {
             return {
-                isCollapse: false
+                isCollapse: false,
+                curActiveMenuIndex: "1"
+            }
+        },
+        async mounted() {
+            let store = this.$store;
+            let userInfoResult = await store.dispatch("GetUserInfo");
+            if(!userInfoResult && userInfoResult.type > UserType.User.id) {
+                this.$router.replace("/login");
+            }
+
+            let curPath = this.$router.history.current.path;
+            if(curPath.lastIndexOf("user") > 0) {
+                this.curActiveMenuIndex = "1";
+            } else if(curPath.lastIndexOf("config") > 0) {
+                this.curActiveMenuIndex = "2";
             }
         },
         methods: {
             toggleAsideSimple() {
                 this.isCollapse = !this.isCollapse;
+            },
+            onMenuSelected(index) {
+                switch(+index) {
+                    case 1:
+                        this.$router.push("/manager/user");
+                        break;
+                    case 2:
+                        this.$router.push("/manager/config");
+                        break;
+                }
             }
         }
     }
