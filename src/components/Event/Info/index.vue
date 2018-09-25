@@ -77,27 +77,16 @@
 </script>
 
 <style type="text/css" lang="less" scoped >
+    @import (reference) "../../../assets/less/common";
+
     .app-component-event-info {
-        width: 100%;
-        height: 100%;
-        position: fixed;
-        left: 0px;
-        top: 0px;
-        background: rgba(0, 0, 0, 0.6);
+        .fix-window-shader;
         &-content {
             width: 560px;
             height: 300px;
-            background: #fff;
-            border-radius: 8px;
             overflow: hidden;
-            position: absolute;
-            left: 50%;
-            top: 50%;
             margin-left: -280px;
             margin-top: -150px;
-            padding: 20px 30px;
-            padding-top: 0px;
-            box-sizing: border-box;
             &[data-type="2"] {
                 height: 350px;
             }
@@ -110,15 +99,6 @@
             box-sizing: border-box;
             border-bottom: 1px solid #F2F2F2;
             position: relative;
-            .el-icon-close {
-                position: absolute;
-                right: 0px;
-                top: 25px;
-                font-size: 30px;
-            }
-        }
-        .row {
-            padding-top: 25px;
         }
         .priority {
             &.priority-normal {

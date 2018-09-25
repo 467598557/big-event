@@ -25,7 +25,7 @@
                 </el-menu>
             </aside>
             <section class="app-view-manager-body-content">
-
+                <router-view/>
             </section>
         </div>
     </div>

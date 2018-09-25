@@ -65,6 +65,7 @@
             }
         },
         async mounted() {
+            let store = this.$store;
             const groupResult = await GroupApi.getList({
                 user: Config.TestUserId
             });

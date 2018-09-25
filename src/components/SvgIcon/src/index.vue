@@ -6,7 +6,6 @@
 <script>
     const requireAll = requireContext => requireContext.keys().map(requireContext);
     const req = require.context('./../../../assets/icon/svg/', false, /\.svg$/);
-    console.log(req.keys());
     requireAll(req);
 
     export default {

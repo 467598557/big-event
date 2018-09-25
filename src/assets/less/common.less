@@ -21,3 +21,40 @@
         background-image: url(./../icon/icon-unlock.png);
     }
 }
+.fix-window-shader(@zOrder:100) {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: @zOrder;
+    &-content {
+        border-radius: 8px;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        background-color: #fff;
+        box-sizing: border-box;
+        padding: 20px 30px;
+        padding-top: 0px;
+        header {
+            text-align: center;
+            height: 80px;
+            font-size: 24px;
+            line-height: 80px;
+            box-sizing: border-box;
+            border-bottom: 1px solid #F2F2F2;
+            position: relative;
+            .el-icon-close {
+                position: absolute;
+                right: 0px;
+                top: 25px;
+                font-size: 30px;
+            }
+        }
+        .row {
+            padding-top: 25px;
+        }
+    }
+}
