@@ -68,7 +68,7 @@
                 this.isFullscreenLoading = false;
                 if(result.retCode === "0000") {
                     this.$emit("onSaveSuccess", this.event);
-                } else {
+                } else {    
                     this.$message.error(result.retMsg);
                 }
             }

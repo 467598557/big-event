@@ -1,7 +1,7 @@
 <template >
     <section class="app-view-index">
         <ul :style="{width:(groups.length+1)*350+'px'}">
-            <li v-for="item in groups" :key="item.id" :class="{'group-slide':item.status==2}">
+            <li v-for="item in groups" :key="item.id" :class="{'group-isCollapse':item.status==2}">
                 <header class="group-header" :data-priority="item.priority">
                     <span class="group-title">
                         {{item.text || ""}}
@@ -42,9 +42,9 @@
     import * as GroupApi from 'src/api/group';
     import * as EventApi from 'src/api/event';
     import * as Config from 'src/config/index';
-    import AppComponentEventInfo from 'src/components/event/info';
-    import AppComponentGroupInfo from 'src/components/group/info';
-    import AppComponentEventItem from 'src/components/event/item';
+    import AppComponentEventInfo from 'src/components/Event/info';
+    import AppComponentGroupInfo from 'src/components/Group/info';
+    import AppComponentEventItem from 'src/components/Event/item';
     export default {
         name: "AppViewIndex",
         components: {
@@ -215,7 +215,7 @@
                 height: 100%;
                 box-sizing: border-box;
                 border: 1px solid #D5D5D5;
-                &.group-slide {
+                &.group-isCollapse {
                     width: 40px;
                     text-align: center;
                     .group-body {

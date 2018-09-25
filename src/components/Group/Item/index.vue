@@ -5,7 +5,7 @@
 </template>
 
 <script type="text/javascript" >
-    import AppComponentEventItem from 'src/components/event/item';
+    import AppComponentEventItem from 'src/components/Event/item';
     export default {
         name: "AppComponetGroupItem",
         props: {
