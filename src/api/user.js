@@ -16,6 +16,10 @@ export async function update(data) {
     return GET("/user/update", data);
 }
 
+export async function updatePassword(data) {
+    return GET("/user/updatePassword", data);
+}
+
 export async function login(data) {
     return GET("/user/login", data);
 }

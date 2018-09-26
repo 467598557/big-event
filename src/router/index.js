@@ -5,10 +5,10 @@ import AppViewLogin from 'src/views/login'
 import AppViewManager from 'src/views/manager'
 import AppViewManagerUser from 'src/views/manager/user'
 import AppViewManagerConfig from 'src/views/manager/config'
+import AppViewManagerInfo from 'src/views/manager/info'
 
 Vue.use(Router)
-
-export default new Router({
+const router = new Router({
     routes: [
         {
             path: '/login',
@@ -24,8 +24,8 @@ export default new Router({
             component: AppViewManager,
             children: [{
                 path: '/',
-                name: 'AppViewManagerUser',
-                component: AppViewManagerUser
+                name: 'AppViewManagerInfo',
+                component: AppViewManagerInfo
             }, {
                 path: 'user',
                 name: 'AppViewManagerUser',
@@ -34,8 +34,13 @@ export default new Router({
                 path: 'config',
                 name: 'AppViewManagerConfig',
                 component: AppViewManagerConfig
+            }, {
+                path: 'info',
+                name: 'AppViewManagerInfo',
+                component: AppViewManagerInfo
             }]
         }
     ]
-})
+});
+export default router;
 

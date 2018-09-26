@@ -36,7 +36,7 @@
             async handleCommand(command) {
                 switch (command) {
                     case "personal":
-
+                        this.$router.push("/manager");
                         break;
                     case "quit":
                         await logout();

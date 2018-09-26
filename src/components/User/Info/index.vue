@@ -17,7 +17,7 @@
                     </el-radio-group>
                 </div>
                 <div class="row text-center">
-                    <el-button v-loading.fullscreen.lock="isFullscreenLoading" type="primary">保存</el-button>
+                    <el-button @click="onSave" v-loading.fullscreen.lock="isFullscreenLoading" type="primary">保存</el-button>
                 </div>
             </div>
         </div>
@@ -26,6 +26,7 @@
 
 <script type="text/javascript" >
     import {UserType} from 'src/config';
+    import {update} from 'src/api/user';
 
     export default {
         name: "AppComponentUserInfo",
@@ -44,6 +45,22 @@
         methods: {
             onClose() {
                 this.$emit("onClose");
+            },
+            async onSave() {
+                let user = this.user;
+                if(!user.password || !user.name) {
+                    this.$message.error("请填写完整信息");
+                    return;
+                }
+
+                this.isFullscreenLoading = true;
+                let result = await update(user);
+                this.isFullscreenLoading = false;
+                if(result.retCode === "0000") {
+                    this.$emit("onSaveSuccess", user);
+                } else {
+                    this.$message.error(result.retMsg);
+                }
             }
         }
     }

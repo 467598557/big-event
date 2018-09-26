@@ -1,6 +1,6 @@
 <template >
     <section >
-        AppViewManagerConfig
+        系统设置，暂无内容
     </section>
 </template>
 

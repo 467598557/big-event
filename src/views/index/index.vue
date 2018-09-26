@@ -1,23 +1,25 @@
-<template >
+<template>
     <section class="app-view-index">
-        <AppComponentHeader ></AppComponentHeader>
+        <AppComponentHeader></AppComponentHeader>
         <ul :style="{width:(groups.length+1)*350+'px'}">
             <li v-for="item in groups" :key="item.id" :class="{'group-isCollapse':item.status==2}">
                 <header class="group-header" :data-priority="item.priority">
-                    <span class="group-title">
+                    <span class="group-title" :title="item.text||''">
                         {{item.text || ""}}
                     </span>
-                    <div v-if="item.status==2" v-html="getGroupSimpleText(item)"></div>
-                    <i class="app-icon" :class="{'app-icon-lock':item.security==1, 'app-icon-unlock':item.security==2}"></i>
-                    <a href="javascript:void(0)" @click="toggleGroupStatus(item)" :class="{'el-icon-arrow-left':item.status==1,'el-icon-arrow-right':item.status==2}"></a>
+                    <div v-if="item.status==2" style="font-size:12px;" v-html="getGroupSimpleText(item)"></div>
+                    <i class="app-icon"
+                       :class="{'app-icon-lock':item.security==1, 'app-icon-unlock':item.security==2}"></i>
+                    <a href="javascript:void(0)" @click="toggleGroupStatus(item)"
+                       :class="{'el-icon-arrow-left':item.status==1,'el-icon-arrow-right':item.status==2}"></a>
                     <a href="javascript:void(0)" @click="addGroupEvent(item)" class="el-icon-circle-plus-outline"></a>
                     <a href="javascript:void(0)" @click="onShowGroupInfo(item)" class="el-icon-setting"></a>
                     <a href="javascript:void(0)" @click="onRemoveGroup(item)" class="el-icon-circle-close-outline"></a>
                 </header>
                 <div class="group-body">
                     <AppComponentEventItem :key="event.id" v-for="event in item.events" :event="event"
-                        @onRemoveEvent="onRemoveEvent"
-                        @onShowEventInfo="onShowEventInfo"
+                                           @onRemoveEvent="onRemoveEvent"
+                                           @onShowEventInfo="onShowEventInfo"
                     ></AppComponentEventItem>
                 </div>
             </li>
@@ -39,10 +41,10 @@
     </section>
 </template>
 
-<script type="text/javascript" >
+<script type="text/javascript">
     import * as GroupApi from 'src/api/group';
     import * as EventApi from 'src/api/event';
-    import * as Config from 'src/config/index';
+    import {splitTimeStrToGoodHTML, isTimeStr} from 'src/utils/time';
     import AppComponentHeader from 'src/components/Header';
     import AppComponentEventInfo from 'src/components/Event/info';
     import AppComponentGroupInfo from 'src/components/Group/info';
@@ -70,12 +72,8 @@
             }
         },
         async mounted() {
-            let store = this.$store;
-            let userInfoResult = await store.dispatch("GetUserInfo");
-            if(!userInfoResult) {
-                this.$router.replace("/login");
-                return;
-            }
+            let userInfoResult = await this.$store.dispatch("GetUserInfo").catch(() => {
+            });
 
             this.user = userInfoResult;
 
@@ -86,14 +84,14 @@
                 user: this.user.id
             });
             let groupEvents = {};
-            eventResult.retData.forEach((event)=> {
-                if(!groupEvents[event.group]) {
+            eventResult.retData.forEach((event) => {
+                if (!groupEvents[event.group]) {
                     groupEvents[event.group] = [];
                 }
 
                 groupEvents[event.group].push(event);
             });
-            this.groups = groupResult.retData.map((group)=> {
+            this.groups = groupResult.retData.map((group) => {
                 group.events = groupEvents[group.id] || [];
 
                 return group;
@@ -108,7 +106,7 @@
                     user: this.user.id
                 });
 
-                if(result.retCode === "0000") {
+                if (result.retCode === "0000") {
                     let group = result.retData;
                     group.events = [];
                     this.groups.push(group);
@@ -120,17 +118,21 @@
                 }
             },
             async onRemoveGroup(group) {
-                let confirmResult = await  this.$confirm('此操作将永久删除该分组以及分组下内容, 是否继续?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning',
-                    center: true
-                });
-                if(confirmResult == "confirm") {
+                let confirmResult = "confirm";
+                if (group.events.length) {
+                    confirmResult = await this.$confirm('此操作将永久删除该分组以及分组下内容, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning',
+                        center: true
+                    });
+                }
+
+                if (confirmResult == "confirm") {
                     await GroupApi.remove(group);
                     let groups = this.groups;
-                    for(let i=0, len=groups.length; i<len; i++) {
-                        if(groups[i] == group) {
+                    for (let i = 0, len = groups.length; i < len; i++) {
+                        if (groups[i] == group) {
                             groups.splice(i, 1);
                             break;
                         }
@@ -173,7 +175,7 @@
                     group: group.id
                 });
 
-                if(result.retCode === "0000") {
+                if (result.retCode === "0000") {
                     let event = result.retData;
                     group.events.push(event);
                 } else {
@@ -182,11 +184,11 @@
             },
             onRemoveEvent(event) {
                 let groups = this.groups;
-                for(let i=0, len=groups.length; i<len; i++) {
+                for (let i = 0, len = groups.length; i < len; i++) {
                     let group = groups[i];
-                    if(group.id == event.group) {
+                    if (group.id == event.group) {
                         let events = group.events;
-                        for(i=0, len=events.length; i<len; i++) {
+                        for (i = 0, len = events.length; i < len; i++) {
                             if (events[i].id == event.id) {
                                 events.splice(i, 1);
                                 break;
@@ -202,12 +204,16 @@
                 this.isEventInfoShow = true;
             },
             getGroupSimpleText(item) {
-                let textList = (item.text || "").split("");
+                let text = item.text || "";
                 let html = "";
-                textList.forEach((text)=> {
-                    html += `<p>${text}</p>`
-                });
-                html += `<p style="color:gray;font-size:12px;"> (${item.events.length})</p>`;
+                if(isTimeStr(text)) {
+                    html = splitTimeStrToGoodHTML(item.text || "");
+                } else {
+                    item.text.split("").forEach((e)=> {
+                        html += `<p>${e}</p>`;
+                    });
+                }
+                html += `<p style="color:gray;"> (${item.events.length})</p>`;
                 return html;
             }
         }
@@ -222,7 +228,7 @@
         overflow-x: auto;
         display: flex;
         flex-direction: column;
-        >ul {
+        > ul {
             overflow: hidden;
             height: 100%;
             flex: 1;
@@ -297,12 +303,18 @@
                 top: 0px;
                 float: left;
                 margin-left: 10px;
+                width: 200px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                font-size: 14px;
+                text-align: left;
             }
             a {
-                font-size: 25px;
-                margin-right: 10px;
+                font-size: 20px;
+                margin-right: 5px;
                 display: inline-block;
-                margin-top: 4px;
+                margin-top: 6.5px;
             }
             &[data-priority="2"] {
                 color: #67C23A;

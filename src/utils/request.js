@@ -2,7 +2,7 @@ import axios from 'axios'
 import {MessageBox, Message} from 'element-ui'
 
 const service = axios.create({
-    baseURL: 'http://localhost:7001/',
+    baseURL: 'http://192.168.10.12:7001/',
     timeout: 5000,
     withCredentials: true
 })
@@ -19,13 +19,15 @@ service.interceptors.response.use(
         let headers = response.headers
         let data = response.data || {}
         if (headers['sessionstatus'] === 'timeout' || data.retCode === '9304') { // 登录状态过期
-            MessageBox.alert('你已被登出，可以取消继续留在该页面，或者重新登录', '登录超时', {
-                type: 'warning',
-                showClose: false,
-                center: true
-            }).then(() => {
-                // 登录跳转
-            })
+            // MessageBox.alert('你已被登出，可以取消继续留在该页面，或者重新登录', '登录超时', {
+            //     type: 'warning',
+            //     showClose: false,
+            //     center: true
+            // }).then(() => {
+            //     // 登录跳转
+            // })
+            Message.error(data.retMsg);
+
             return Promise.reject(data)
         } else if (data.retCode !== '0000') {
             return Promise.reject(data)

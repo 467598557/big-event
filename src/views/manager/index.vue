@@ -1,12 +1,10 @@
 <template >
     <div class="app-view-manager">
         <header class="app-view-manager-header">
-            后台管理系统
-            <el-dropdown v-if="user" >
-                <span class="el-dropdown-link">
-                    {{user.name}}<a class="logout-btn" @click="logout" href="javascript:void(0)" >登出</a>
-                </span>
-            </el-dropdown>
+            <a href="javascript:void(0)" @click="onBack" class="return-btn">返回</a>后台管理系统
+            <span v-if="user" class="base-info">
+                {{user.name}}<a class="logout-btn" @click="logout" href="javascript:void(0)" >登出</a>
+            </span>
         </header>
         <div class="app-view-manager-body">
             <aside class="app-view-manager-body-aside" :class="{'simple-mode':isCollapse}">
@@ -20,13 +18,9 @@
                     :default-active="curActiveMenuIndex"
                     @select="onMenuSelected"
                     class="el-menu-vertical-demo">
-                    <el-menu-item index="1">
-                        <SvgIcon icon-class="user-manager"></SvgIcon>
-                        <span slot="title">用户管理</span>
-                    </el-menu-item>
-                    <el-menu-item index="2">
-                        <SvgIcon icon-class="system-setting"></SvgIcon>
-                        <span slot="title">系统设置</span>
+                    <el-menu-item :index="item.key" v-for="item in menuList">
+                        <SvgIcon :icon-class="item.icon"></SvgIcon>
+                        <span slot="title">{{item.text}}</span>
                     </el-menu-item>
                 </el-menu>
             </aside>
@@ -38,7 +32,7 @@
 </template>
 
 <script type="text/javascript" >
-    import {UserType} from 'src/config/index';
+    import {UserType, UserManagerPageRoleList} from 'src/config/index';
     import {logout} from 'src/api/user';
 
     export default  {
@@ -46,7 +40,8 @@
         data() {
             return {
                 isCollapse: false,
-                curActiveMenuIndex: "1"
+                menuList: [],
+                curActiveMenuIndex: "info"
             }
         },
         computed: {
@@ -55,17 +50,17 @@
             }
         },
         async mounted() {
-            let store = this.$store;
-            let userInfoResult = await store.dispatch("GetUserInfo");
-            if(!userInfoResult && userInfoResult.type > UserType.User.id) {
-                this.$router.replace("/login");
-            }
-
+            let user = this.$store.state.user.user;
+            this.menuList = UserManagerPageRoleList[user.type];
             let curPath = this.$router.history.current.path;
             if(curPath.lastIndexOf("user") > 0) {
-                this.curActiveMenuIndex = "1";
+                this.curActiveMenuIndex = "user";
             } else if(curPath.lastIndexOf("config") > 0) {
-                this.curActiveMenuIndex = "2";
+                this.curActiveMenuIndex = "config";
+            } else if(curPath.lastIndexOf("info") > 0) {
+                this.curActiveMenuIndex = "info";
+            } else {
+                this.curActiveMenuIndex = "info";
             }
         },
         methods: {
@@ -73,18 +68,24 @@
                 this.isCollapse = !this.isCollapse;
             },
             onMenuSelected(index) {
-                switch(+index) {
-                    case 1:
+                switch(index) {
+                    case "user":
                         this.$router.push("/manager/user");
                         break;
-                    case 2:
+                    case "config":
                         this.$router.push("/manager/config");
+                        break;
+                    case "info":
+                        this.$router.push("/manager/info");
                         break;
                 }
             },
             async logout() {
                 await logout();
                 this.$router.replace("/login");
+            },
+            onBack() {
+                this.$router.push("/");
             }
         }
     }
@@ -103,14 +104,20 @@
             color: #fff;
             font-size: 20px;
             text-indent: 15px;
+            overflow: hidden;
             .logout-btn {
                 margin-left: 10px;
                 color: #fff;
             }
-            .el-dropdown {
+            .base-info {
                 float: right;
                 margin-right: 15px;
                 color: rgba(255, 255, 255, 0.8);
+                font-size: 14px;
+            }
+            .return-btn {
+                margin: 0px 15px;
+                font-size: 13px;
             }
         }
         &-body {
@@ -123,10 +130,6 @@
                 width: 200px;
                 height: 100%;
                 background-color: #333744;
-                -webkit-transition-duration: 200ms;
-                -moz-transition-duration: 200ms;
-                -ms-transition-duration: 200ms;
-                -o-transition-duration: 200ms;
                 transition-duration: 200ms;
                 .aside-controller {
                     background: #4a5064;
@@ -171,6 +174,7 @@
             }
             &-content {
                 flex: 1;
+                position:relative
             }
         }
     }

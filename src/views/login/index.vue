@@ -29,7 +29,7 @@
             return {
                 logining: false,
                 ruleForm: {
-                    name: '过滤嘴',
+                    name: '测试',
                     password: '123456'
                 },
                 rules: {
@@ -47,7 +47,14 @@
             handleReset() {    
                 this.$refs.ruleForm.resetFields();
             },
-            handleSubmit(ev) {
+            onKeyUp(e) {
+                if(e.keyCode != 13) {
+                    return;
+                }
+
+                this.handleSubmit();
+            },
+            handleSubmit() {
                 this.$refs.ruleForm.validate(async (valid) => {
                     if(!valid) {
                         this.logining = false;
@@ -57,21 +64,14 @@
                     this.logining = true;
                     let userInfo = this.ruleForm;
                     let user = await this.$store.dispatch("Login", userInfo).catch((err)=> {
+                        this.logining = false;
                         this.$message({
                             message: err ? err.retMsg : "系统内部错误",
                             type: 'error'
                         });
                     });
 
-                    switch(user.type) {
-                        case UserType.Admin.id:
-                        case UserType.Manager.id:
-                            this.$router.push("/manager/");
-                            break;
-                        case UserType.User.id:
-                            this.$router.push("/");
-                            break;
-                    }
+                    this.$router.push("/");
                 });
             }
         }

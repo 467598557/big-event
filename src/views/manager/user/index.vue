@@ -1,12 +1,12 @@
 <template>
     <section class="app-view-manager-user">
-        <el-row >
+        <div >
             <el-button-group>
                 <el-button @click="onShowEditUserPanel" type="primary" icon="el-icon-edit"></el-button>
                 <el-button @click="onAddAndEditUser" type="primary" icon="el-icon-plus"></el-button>
                 <el-button @click="onRemoveUser" type="primary" icon="el-icon-close"></el-button>
             </el-button-group>
-        </el-row>
+        </div>
         <el-table
             ref="multipleTable"
             :data="userList"
@@ -19,7 +19,7 @@
             </el-table-column>
             <el-table-column
                 prop="name"
-                label="昵称"
+                label="账号"
                 width="180">
             </el-table-column>
             <el-table-column
@@ -36,6 +36,7 @@
             :user="curUserInfo" v-if="curUserInfo"
             v-show="isShowUserInfo"
             @onClose="onUserInfoClose"
+            @onSaveSuccess="onUserInfoSaveSuccess"
             v-cloak></AppComponentUserInfo>
     </section>
 </template>
@@ -54,6 +55,7 @@
             return {
                 isShowUserInfo: false,
                 curUserInfo: null,
+                curUserOriInfo: null,
                 userList: [],
                 multipleSelection: []
             };
@@ -75,7 +77,9 @@
                     return;
                 }
 
-                this.curUserInfo = this.multipleSelection[0];
+                let user = this.multipleSelection[0];
+                this.curUserInfo = Object.assign({}, user);
+                this.curUserOriInfo = user;
                 this.isShowUserInfo = true;
             },
             async onAddAndEditUser() {
@@ -86,7 +90,8 @@
                 });
 
                 let user = result.retData;
-                this.curUserInfo = user;
+                this.curUserInfo = Object.assign({}, user);
+                this.curUserOriInfo = user;
                 this.isShowUserInfo = true;
                 this.userList.unshift(user);
             },
@@ -118,7 +123,11 @@
             },
             onUserInfoClose() {
                 this.isShowUserInfo = false;
-                this.curUserInfo = null;
+                this.curUserInfo = this.curUserOriInfo = null;
+            },
+            onUserInfoSaveSuccess(user) {
+                Object.assign(this.curUserOriInfo, user);
+                this.onUserInfoClose();
             }
         }
     }
@@ -126,6 +135,9 @@
 
 <style type="text/css" lang="less" scoped>
     .app-view-manager-user {
-        margin: 10px;
+        position: absolute; // 临时解决flex下el-table引发的动画问题
+        width: 100%;
+        box-sizing: border-box;
+        padding: 10px;
     }
 </style>
