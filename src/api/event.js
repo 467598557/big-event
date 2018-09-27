@@ -1,18 +1,18 @@
 import {GET} from './../utils/request';
 
 export function getList(data) {
-    return GET('/events/list', data);
+    return GET('/event/list', data);
 }
 
 export function add(data) {
-    return GET('/events/add', data);
+    return GET('/event/add', data);
 }
 
 export async function remove(data) {
-    return GET("/events/delete", data);
+    return GET("/event/delete", data);
 }
 
 export async function update(data) {
-    return GET("/events/update", data);
+    return GET("/event/update", data);
 }
 

@@ -35,6 +35,7 @@
     import AppComponentGroupInfo from 'src/components/Group/info';
     import AppComponentEventItem from 'src/components/Event/item';
     import AppComponentEventInfo from 'src/components/Event/info';
+    import {MixinStoreUser} from 'src/store/mixin';
 
     export default {
         name: "AppComponetGroupItem",
@@ -48,11 +49,7 @@
                 default: false
             }
         },
-        computed: {
-            user() {
-                return this.$store.state.user.user;
-            }
-        },
+        mixins: [MixinStoreUser],
         components: {
             AppComponentEventItem,
             AppComponentEventInfo,

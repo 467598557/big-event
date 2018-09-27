@@ -32,6 +32,7 @@
 
 <script type="text/javascript" >
     import {updatePassword} from 'src/api/user';
+    import {MixinStoreUser} from 'src/store/mixin';
 
     export default {
         name: "AppViewManagerInfo",
@@ -78,11 +79,7 @@
                 }
             }
         },
-        computed: {
-            user() {
-                return this.$store.state.user.user;
-            }
-        },
+        mixins: [MixinStoreUser],
         methods: {
             async handleSubmit() {
                 this.$refs.ruleForm.validate(async (valid) => {

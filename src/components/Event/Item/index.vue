@@ -13,8 +13,8 @@
 
 <script type="text/javascript" >
     import * as EventApi from 'src/api/event';
-    import * as Config from 'src/config/index';
     import {timeSpanReadableString} from 'src/utils/time';
+    import {MixinStoreUser} from 'src/store/mixin';
 
     export default {
         name: "AppComponentEventItem",
@@ -24,6 +24,7 @@
                 default: null
             }
         },
+        mixins: [MixinStoreUser],
         data() {
             return  {
                 isShowBtns: false
@@ -50,7 +51,7 @@
             },
             async onRemoveEvent() {
                 await EventApi.remove({
-                    user: this.$store.state.user.user.id,
+                    user: this.user.id,
                     id: this.event.id
                 });
 

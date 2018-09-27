@@ -19,6 +19,7 @@
 
 <script type="text/javascript" >
     import {logout} from 'src/api/user';
+    import {MixinStoreUser} from 'src/store/mixin';
 
     export default {
         name: "AppComponentHeader",
@@ -27,11 +28,7 @@
                 searchText: ""
             }
         },
-        computed: {
-            user() {
-                return this.$store.state.user.user
-            }
-        },
+        mixins: [MixinStoreUser],
         methods: {
             async handleCommand(command) {
                 switch (command) {
