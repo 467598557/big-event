@@ -1,9 +1,10 @@
 <template>
     <section class="app-component-header">
         <div class="app-component-header-content">
-            <el-input placeholder="请输入内容" v-model="searchText">
-                <el-button @click="onSearch" slot="append" icon="el-icon-search"></el-button>
-            </el-input>
+            <!--<el-input placeholder="请输入内容" v-model="searchText">-->
+                <!--<el-button @click="onSearch" slot="append" icon="el-icon-search"></el-button>-->
+            <!--</el-input> -->
+            <span class="logo"></span>
             <el-dropdown v-if="user"  @command="handleCommand">
                 <span class="el-dropdown-link">
                     {{user.name}}<i class="el-icon-arrow-down el-icon--right"></i>
@@ -59,6 +60,14 @@
         height: 60px;
         color: hsla(0,0%,100%,0.75);
         border-bottom: 1px solid #d5d5d5;
+        .logo {
+            width: 190px;
+            height: 100%;
+            display: block;
+            float: left;
+            background: url(./../../assets/logo.png) no-repeat left center;
+            background-size: auto 100%;
+        }
         &-content {
             width: 80%;
             height: 100%;
