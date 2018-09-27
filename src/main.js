@@ -35,7 +35,6 @@ Vue.prototype.$message = Message;
 Loading.install(Vue);
 
 router.beforeEach(async (to ,from,  next)=> {
-    console.log(from, to, "from -> to router", router);
     let toPath = to.fullPath;
     if(toPath != "/login") { // 检查权限
         let user = await store.dispatch("GetUserInfo").catch((result)=> {

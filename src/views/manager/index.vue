@@ -34,6 +34,7 @@
 <script type="text/javascript" >
     import {UserType, UserManagerPageRoleList} from 'src/config/index';
     import {logout} from 'src/api/user';
+    import {MixinStoreUser} from 'src/store/mixin';
 
     export default  {
         name: "AppViewManager",
@@ -44,14 +45,10 @@
                 curActiveMenuIndex: "info"
             }
         },
-        computed: {
-            user() {
-                return this.$store.state.user.user;
-            }
-        },
+        mixins: [MixinStoreUser],
         async mounted() {
-            let user = this.$store.state.user.user;
-            this.menuList = UserManagerPageRoleList[user.type];
+            await this.$store.dispatch("GetUserInfo").catch(() => { });
+            this.menuList = UserManagerPageRoleList[this.user.type];
             let curPath = this.$router.history.current.path;
             if(curPath.lastIndexOf("user") > 0) {
                 this.curActiveMenuIndex = "user";

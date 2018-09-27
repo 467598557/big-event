@@ -4,6 +4,10 @@
             <el-form :model="form" :rules="rules" ref="ruleForm"
                      label-position="left" label-width="0px"
                      class="demo-ruleForm">
+                <el-form-item >
+                    <el-input :readonly="true" type="text" v-model="user.name" auto-complete="off"
+                              placeholder="账号"></el-input>
+                </el-form-item>
                 <el-form-item prop="oldPassword">
                     <el-input type="password" v-model="form.oldPassword" auto-complete="off"
                               placeholder="旧密码"></el-input>
@@ -72,6 +76,11 @@
                         {validator: validateRePassword, trigger: 'blur'},
                     ]
                 }
+            }
+        },
+        computed: {
+            user() {
+                return this.$store.state.user.user;
             }
         },
         methods: {

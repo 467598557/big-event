@@ -2,7 +2,7 @@
     <section class="app-component-header">
         <div class="app-component-header-content">
             <el-input placeholder="请输入内容" v-model="searchText">
-                <el-button @keyup="onKeyUp" @click="onSearch" slot="append" icon="el-icon-search"></el-button>
+                <el-button @click="onSearch" slot="append" icon="el-icon-search"></el-button>
             </el-input>
             <el-dropdown v-if="user"  @command="handleCommand">
                 <span class="el-dropdown-link">
@@ -50,14 +50,7 @@
                     return;
                 }
 
-                this.$message("搜索条件："+this.searchText);
-            },
-            onKeyUp(e) {
-                if(e.keyCode != 13) {
-                    return;
-                }
-
-                this.onSearch();
+                this.$message("搜索功能正在紧锣密鼓的推敲和实现");
             }
         }
     }
