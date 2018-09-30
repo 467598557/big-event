@@ -11,7 +11,10 @@
             <el-input type="password" v-model="ruleForm.password" auto-complete="off"
                       placeholder="密码"></el-input>
         </el-form-item>
+        <!--<div class="row">-->
         <el-checkbox v-model="checked" checked class="remember">记住密码</el-checkbox>
+        <a href="javascript:void(0)" class="register-btn">注册</a>
+        <!--</div>-->
         <el-form-item style="width:100%;">
             <el-button type="primary" style="width:100%;"
                        @click.native.prevent="handleSubmit" :loading="logining">登录
@@ -96,6 +99,10 @@
         }
         .remember {
             margin: 0px 0px 35px 0px;
+        }
+        .register-btn {
+            float: right;
+            font-size: 14px;
         }
     }
 </style>

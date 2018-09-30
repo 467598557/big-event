@@ -1,5 +1,5 @@
 <template >
-    <section class="app-componet-group" :class="{'group-isCollapse': isCollapse}" v-if="group">
+    <section class="app-componet-group" :class="{'group-isCollapse': isCurUser ? isCollapse : false}" v-if="group">
         <header class="group-header" :data-priority="group.priority">
                     <span class="group-title" :title="group.text||''">
                         {{group.text || ""}}
@@ -7,11 +7,13 @@
             <div v-if="group.status==2" style="font-size:12px;" v-html="getGroupSimpleText(group)"></div>
             <i class="app-icon"
                :class="{'app-icon-lock':group.security==1, 'app-icon-unlock':group.security==2}"></i>
-            <a href="javascript:void(0)" @click="toggleGroupStatus(group)"
-               :class="{'el-icon-arrow-left':group.status==1,'el-icon-arrow-right':group.status==2}"></a>
-            <a href="javascript:void(0)" @click="addGroupEvent(group)" class="el-icon-circle-plus-outline"></a>
-            <a href="javascript:void(0)" @click="onShowGroupInfo(group)" class="el-icon-setting"></a>
-            <a href="javascript:void(0)" @click="onRemoveGroup(group)" class="el-icon-circle-close-outline"></a>
+            <span v-if="isCurUser">  
+                <a href="javascript:void(0)" @click="toggleGroupStatus(group)"
+                   :class="{'el-icon-arrow-left':group.status==1,'el-icon-arrow-right':group.status==2}"></a>
+                <a href="javascript:void(0)" @click="addGroupEvent(group)" class="el-icon-circle-plus-outline"></a>
+                <a href="javascript:void(0)" @click="onShowGroupInfo(group)" class="el-icon-setting"></a>
+                <a href="javascript:void(0)" @click="onRemoveGroup(group)" class="el-icon-circle-close-outline"></a>
+            </span>
         </header>
         <div class="group-body">
             <AppComponentEventItem :key="event.id" v-for="event in group.events" :event="event"
@@ -55,6 +57,15 @@
             AppComponentEventInfo,
             AppComponentGroupInfo
         },
+        computed: {
+            isCurUser() {
+                if(!this.group) {
+                    return false;
+                }
+
+                return this.user.id == this.group.user;
+            }
+        },
         data() {
             return  {
                 curEventInfo: null,
@@ -66,7 +77,7 @@
             onRemoveEvent(event) {
                 let group = this.group;
                 let events = group.events;
-                for (i = 0, len = events.length; i < len; i++) {
+                for (let i = 0, len = events.length; i < len; i++) {
                     if (events[i].id == event.id) {
                         events.splice(i, 1);
                         break;

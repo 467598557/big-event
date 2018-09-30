@@ -60,6 +60,7 @@
         height: 60px;
         color: hsla(0,0%,100%,0.75);
         border-bottom: 1px solid #d5d5d5;
+        box-sizing: border-box;
         .logo {
             width: 190px;
             height: 100%;

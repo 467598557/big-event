@@ -36,7 +36,8 @@ Loading.install(Vue);
 
 router.beforeEach(async (to ,from,  next)=> {
     let toPath = to.fullPath;
-    if(toPath != "/login") { // 检查权限
+    // || toPath != "/register"
+    if(toPath != "/login" && toPath != "/register") { // 检查权限
         let user = await store.dispatch("GetUserInfo").catch((result)=> {
             Message.error("系统内部错误");
         });

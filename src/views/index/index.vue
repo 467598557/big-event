@@ -14,6 +14,31 @@
                 <a href="javascript:void(0)" @click="onAddGroup" class="group-plus el-icon-circle-plus-outline"></a>
             </li>
         </ul>
+        <div class="user-list">
+            <ul >
+                <li class="user" v-for="userItem in users">
+                    <p class="user-title" :class="{active:userItem.isCollapse}" @click="toggleUserCollapse(userItem)">
+                        {{userItem.name}}
+                        <i v-if="!userItem.isCollapse" class="el-icon-arrow-down"></i>
+                        <i v-if="userItem.isCollapse" class="el-icon-arrow-up"></i>
+                    </p>
+                    <ul class="group-list" v-if="userItem.groups.length" :class="{show:userItem.isCollapse}" :style="{width:(groups.length+1)*350+'px'}">
+                        <li v-for="item in userItem.groups" :key="item.id" :class="{'group-isCollapse':item.status==2}">
+                            <AppComponentGroupItem
+                                :group="item"
+                                :isCollapse="item.status==2"
+                                @onShowInfo="onShowGroupInfo"
+                                @onRemove="onRemoveGroup"
+                            ></AppComponentGroupItem>
+                        </li>
+                    </ul>
+                    <div v-else class="user-group-empty" :class="{show:userItem.isCollapse}">
+                        没有数据呢
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <AppComponentFooter></AppComponentFooter>
         <AppComponentGroupInfo
             :is-show="isShowGroupInfo"
             :group="curGroupInfo"
@@ -25,7 +50,9 @@
 <script type="text/javascript">
     import * as GroupApi from 'src/api/group';
     import * as EventApi from 'src/api/event';
+    import * as UserApi from 'src/api/user';
     import AppComponentHeader from 'src/components/Header';
+    import AppComponentFooter from 'src/components/Footer';
     import AppComponentGroupItem from 'src/components/Group/item';
     import AppComponentGroupInfo from 'src/components/Group/info';
     import {MixinStoreUser} from 'src/store/mixin';
@@ -35,7 +62,8 @@
         components: {
             AppComponentGroupInfo,
             AppComponentGroupItem,
-            AppComponentHeader
+            AppComponentHeader,
+            AppComponentFooter
         },
         mixins: [MixinStoreUser],
         data() {
@@ -43,7 +71,8 @@
                 curGroupInfo: null,
                 curGroupOriInfo: null,
                 isShowGroupInfo: false,
-                groups: []
+                groups: [],
+                users: []
             }
         },
         async mounted() {
@@ -54,21 +83,37 @@
             const eventResult = await EventApi.getList({
                 user: this.user.id
             });
-            let groupEvents = {};
-            eventResult.retData.forEach((event) => {
-                if (!groupEvents[event.group]) {
-                    groupEvents[event.group] = [];
-                }
+            this.groups = this.combileGroupsAndEvents(groupResult.retData, eventResult.retData);
 
-                groupEvents[event.group].push(event);
+            const userResult = await UserApi.getList();
+            userResult.retData.forEach((user)=> {
+                user.groups = [];
+                user.isCollapse = false;
             });
-            this.groups = groupResult.retData.map((group) => {
-                group.events = groupEvents[group.id] || [];
 
-                return group;
+            let user = this.user;
+            this.users = userResult.retData.filter((_user)=> {
+                return user.id != _user.id;
             });
         },
         methods: {
+            combileGroupsAndEvents(groups, events) {
+                let groupEvents = {};
+                events.forEach((event) => {
+                    if (!groupEvents[event.group]) {
+                        groupEvents[event.group] = [];
+                    }
+
+                    groupEvents[event.group].push(event);
+                });
+                groups = groups.map((group) => {
+                    group.events = groupEvents[group.id] || [];
+
+                    return group;
+                });
+
+                return groups;
+            },
             async onAddGroup() {
                 let result = await GroupApi.add({
                     text: "新建分组",
@@ -121,6 +166,43 @@
             onGroupSaveSuccess(group) {
                 this.onGroupInfoClose();
                 Object.assign(this.curGroupOriInfo, group);
+            },
+            toggleUserCollapse(user) {
+                if(user.isCollapse) {
+                    user.isCollapse = false;
+                    return;
+                }
+
+                this.users.forEach((_user)=> {
+                    _user.isCollapse = _user.id == user.id;
+                });
+
+                if(user.isCollapse) {
+                    //
+                    this.checkUserGroup(user);
+                }
+            },
+            async checkUserGroup(user) {
+                if(user.groups.length) {
+                    return;
+                }
+
+                let groupResult = await GroupApi.getList({
+                    user: user.id
+                });
+                let groups = groupResult.retData || [];
+                if(!groups.length) {
+                    return;
+                }
+
+                let eventResult = await EventApi.getListByGroups({
+                    groups: JSON.stringify(groups.map((group)=> {
+                        return group.id
+                    }))
+                });
+                let events = eventResult.retData;
+
+                user.groups = this.combileGroupsAndEvents(groups, events);
             }
         }
     }
@@ -132,12 +214,10 @@
         height: 100%;
         overflow: hidden;
         overflow-x: auto;
-        display: flex;
-        flex-direction: column;
+        overflow-y: auto;
         .group-list {
             overflow: hidden;
-            height: 100%;
-            flex: 1;
+            height: calc(100% - 60px);
             li {
                 float: left;
                 width: 350px;
@@ -148,35 +228,6 @@
                 &.group-isCollapse {
                     width: 40px;
                 }
-                /*&.group-isCollapse {*/
-                    /*width: 40px;*/
-                    /*text-align: center;*/
-                    /*.group-body {*/
-                        /*display: none;*/
-                    /*}*/
-                    /*.group-header {*/
-                        /*width: 100%;*/
-                        /*height: auto;*/
-                        /*text-align: center;*/
-                        /*border-bottom: none;*/
-                        /*line-height: 20px;*/
-                        /*.app-icon {*/
-                            /*margin-left: 10px;*/
-                        /*}*/
-                        /*a {*/
-                            /*margin-right: 0px;*/
-                        /*}*/
-                        /*.el-icon-arrow-right {*/
-                            /*margin-top: 15px;*/
-                        /*}*/
-                        /*.el-icon-circle-close-outline, .el-icon-circle-plus-outline {*/
-                            /*display: none;*/
-                        /*}*/
-                        /*.group-title {*/
-                            /*display: none;*/
-                        /*}*/
-                    /*}*/
-                /*}*/
             }
         }
         .el-icon-circle-plus-outline.group-plus {
@@ -193,53 +244,43 @@
                 opacity: 1;
             }
         }
-        /*.group-header {*/
-            /*height: 35px;*/
-            /*width: 100%;*/
-            /*border-bottom: 1px solid #D5D5D5;*/
-            /*line-height: 34px;*/
-            /*text-align: right;*/
-            /*box-sizing: border-box;*/
-            /*position: relative;*/
-            /*overflow: hidden;*/
-            /*.app-icon {*/
-                /*float: left;*/
-                /*margin-left: 5px;*/
-                /*margin-top: 9px;*/
-            /*}*/
-            /*.group-title {*/
-                /*left: 10px;*/
-                /*top: 0px;*/
-                /*float: left;*/
-                /*margin-left: 10px;*/
-                /*width: 200px;*/
-                /*overflow: hidden;*/
-                /*text-overflow: ellipsis;*/
-                /*white-space: nowrap;*/
-                /*font-size: 14px;*/
-                /*text-align: left;*/
-            /*}*/
-            /*a {*/
-                /*font-size: 20px;*/
-                /*margin-right: 5px;*/
-                /*display: inline-block;*/
-                /*margin-top: 6.5px;*/
-            /*}*/
-            /*&[data-priority="2"] {*/
-                /*color: #67C23A;*/
-            /*}*/
-            /*&[data-priority="3"] {*/
-                /*color: #E6A23C;*/
-            /*}*/
-            /*&[data-priority="4"] {*/
-                /*color: #F56C6C;*/
-            /*}*/
-        /*}*/
-        /*.group-body {*/
-            /*height: calc(100% - 35px);*/
-            /*text-align: center;*/
-            /*overflow: hidden;*/
-            /*overflow-y: auto;*/
-        /*}*/
+        .user-list {
+            width: 100%;
+            border-top: 1px solid #D5D5D5;
+            .user {
+                border-bottom: 1px solid #D5D5D5;
+                .user-title {
+                    padding: 10px 0px;
+                    text-indent: 15px;
+                    cursor: pointer;
+                    overflow: hidden;
+                    color: gray;
+                    &:hover, &.active {
+                        background-color: #e5e9f2;
+                    }
+                    i {
+                        float: right;
+                        margin-right: 15px;
+                    }
+                }
+                .group-list, .user-group-empty {
+                    display: none;
+                    &.show {
+                        display: block;
+                    }
+                }
+                .user-group-empty {
+                    background-color: rgba(230, 162, 60, 0.3);
+                    color: #666;
+                    text-align: center;
+                    line-height: 40px;
+                    font-size: 12px;
+                }
+                .group-list {
+                    height: 500px;
+                }
+            }
+        }
     }
 </style>
+

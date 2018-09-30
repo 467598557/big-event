@@ -3,10 +3,10 @@
         <p class="app-component-event-text" :data-priority="event.priority">{{event.text}}</p>
         <p class="other-info">
             {{readableCreateTime}}<span v-if="event.type==2">（{{statusText}}）</span>
-            <span class="btns" :class="{show:isShowBtns}">
-            <a href="javascript:void(0)" @click="onShowEventInfo()" class="el-icon-setting"></a>
-            <a href="javascript:void(0)" @click="onRemoveEvent()" class="el-icon-circle-close-outline"></a>
-        </span>
+            <span class="btns" v-if="isCurUser" :class="{show:isShowBtns}">
+                <a href="javascript:void(0)" @click="onShowEventInfo()" class="el-icon-setting"></a>
+                <a href="javascript:void(0)" @click="onRemoveEvent()" class="el-icon-circle-close-outline"></a>
+            </span>
         </p>
     </section>
 </template>
@@ -43,6 +43,9 @@
                     case 3:
                         return "已完成";
                 }
+            },
+            isCurUser() {
+                return this.user.id == this.event.user;
             }
         },
         methods: {

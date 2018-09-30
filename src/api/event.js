@@ -4,6 +4,10 @@ export function getList(data) {
     return GET('/event/list', data);
 }
 
+export function getListByGroups(data) {
+    return GET('/event/listByGroups', data);
+}
+
 export function add(data) {
     return GET('/event/add', data);
 }
