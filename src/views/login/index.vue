@@ -13,7 +13,7 @@
         </el-form-item>
         <!--<div class="row">-->
         <el-checkbox v-model="checked" checked class="remember">记住密码</el-checkbox>
-        <a href="javascript:void(0)" class="register-btn">注册</a>
+        <router-link to="/register" class="register-btn">注册</router-link>
         <!--</div>-->
         <el-form-item style="width:100%;">
             <el-button type="primary" style="width:100%;"
