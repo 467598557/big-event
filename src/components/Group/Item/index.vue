@@ -71,18 +71,20 @@
             let group = this.group;
             if (group && group.events) {
                 Sortable.create(this.$refs.groupBody, {
-                    onEnd(e) {
+                    async onEnd(e) {
                         let children = e.from.children;
                         let data = [];
                         for(let i=0, len=children.length; i<len; i++) {
                             let eventId = children[i].getAttribute("data-id");
                             data.push({
-                                eventId,
+                                id: eventId,
                                 index: i
                             });
                         }
 
-                        console.log(data);
+                        await EventApi.updateIndex({
+                            data: data
+                        });
                     }
                 })
             }

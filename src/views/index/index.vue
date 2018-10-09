@@ -107,7 +107,12 @@
                     groupEvents[event.group].push(event);
                 });
                 groups = groups.map((group) => {
-                    group.events = groupEvents[group.id] || [];
+                    let events = groupEvents[group.id] || [];
+                    events.sort((a, b)=> {
+                        return a.index > b.index ? 1 : -1;
+                    });
+                    group.events = events;
+
 
                     return group;
                 });

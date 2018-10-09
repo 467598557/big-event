@@ -19,13 +19,6 @@ service.interceptors.response.use(
         let headers = response.headers
         let data = response.data || {}
         if (headers['sessionstatus'] === 'timeout' || data.retCode === '9304') { // 登录状态过期
-            // MessageBox.alert('你已被登出，可以取消继续留在该页面，或者重新登录', '登录超时', {
-            //     type: 'warning',
-            //     showClose: false,
-            //     center: true
-            // }).then(() => {
-            //     // 登录跳转
-            // })
             Message.error(data.retMsg);
 
             return Promise.reject(data)
@@ -40,7 +33,6 @@ service.interceptors.response.use(
             type: 'error',
             duration: 5 * 1000
         })
-        // return Promise.reject(error)
     })
 
 // export default service

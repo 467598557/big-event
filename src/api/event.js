@@ -1,4 +1,4 @@
-import {GET} from './../utils/request';
+import {GET, POST} from './../utils/request';
 
 export function getList(data) {
     return GET('/event/list', data);
@@ -18,5 +18,9 @@ export async function remove(data) {
 
 export async function update(data) {
     return GET("/event/update", data);
+}
+
+export async function updateIndex(data) {
+    return POST("/event/updateIndex", data);
 }
 
