@@ -53,8 +53,8 @@
     import * as UserApi from 'src/api/user';
     import AppComponentHeader from 'src/components/Header';
     import AppComponentFooter from 'src/components/Footer';
-    import AppComponentGroupItem from 'src/components/Group/item';
-    import AppComponentGroupInfo from 'src/components/Group/info';
+    import AppComponentGroupItem from 'src/components/Group/Item';
+    import AppComponentGroupInfo from 'src/components/Group/Info';
     import {MixinStoreUser} from 'src/store/mixin';
 
     export default {
