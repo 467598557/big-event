@@ -1,4 +1,4 @@
-<template >
+<template>
     <section class="app-componet-group" :class="{'group-isCollapse': isCurUser ? isCollapse : false}" v-if="group">
         <header class="group-header" :data-priority="group.priority">
                     <span class="group-title" :title="group.text||''">
@@ -15,28 +15,29 @@
                 <a href="javascript:void(0)" @click="onRemoveGroup(group)" class="el-icon-circle-close-outline"></a>
             </span>
         </header>
-        <div class="group-body">
+        <div class="group-body" ref="groupBody">
             <AppComponentEventItem :key="event.id" v-for="event in group.events" :event="event"
-               @onRemoveEvent="onRemoveEvent"
-               @onShowEventInfo="onShowEventInfo"
+                                   @onRemoveEvent="onRemoveEvent"
+                                   @onShowEventInfo="onShowEventInfo"
             ></AppComponentEventItem>
         </div>
         <AppComponentEventInfo
-            :is-show="isShowEventInfo"
-            :event="curEventInfo"
-            @onClose="onEventInfoClose"
-            @onSaveSuccess="onEventSaveSuccess"
+                :is-show="isShowEventInfo"
+                :event="curEventInfo"
+                @onClose="onEventInfoClose"
+                @onSaveSuccess="onEventSaveSuccess"
         ></AppComponentEventInfo>
     </section>
 </template>
 
-<script type="text/javascript" >
+<script type="text/javascript">
+    import Sortable from 'sortablejs';
     import * as GroupApi from 'src/api/group';
     import * as EventApi from 'src/api/event';
     import {splitTimeStrToGoodHTML, isTimeStr} from 'src/utils/time';
-    import AppComponentGroupInfo from 'src/components/Group/info';
-    import AppComponentEventItem from 'src/components/Event/item';
-    import AppComponentEventInfo from 'src/components/Event/info';
+    import AppComponentGroupInfo from 'src/components/Group/Info';
+    import AppComponentEventItem from 'src/components/Event/Item';
+    import AppComponentEventInfo from 'src/components/Event/Info';
     import {MixinStoreUser} from 'src/store/mixin';
 
     export default {
@@ -59,15 +60,35 @@
         },
         computed: {
             isCurUser() {
-                if(!this.group) {
+                if (!this.group) {
                     return false;
                 }
 
                 return this.user.id == this.group.user;
             }
         },
+        mounted() {
+            let group = this.group;
+            if (group && group.events) {
+                Sortable.create(this.$refs.groupBody, {
+                    onEnd(e) {
+                        let children = e.from.children;
+                        let data = [];
+                        for(let i=0, len=children.length; i<len; i++) {
+                            let eventId = children[i].getAttribute("data-id");
+                            data.push({
+                                eventId,
+                                index: i
+                            });
+                        }
+
+                        console.log(data);
+                    }
+                })
+            }
+        },
         data() {
-            return  {
+            return {
                 curEventInfo: null,
                 curEventOriInfo: null,
                 isShowEventInfo: false
@@ -99,10 +120,10 @@
             getGroupSimpleText(item) {
                 let text = item.text || "";
                 let html = "";
-                if(isTimeStr(text)) {
+                if (isTimeStr(text)) {
                     html = splitTimeStrToGoodHTML(item.text || "");
                 } else {
-                    item.text.split("").forEach((e)=> {
+                    item.text.split("").forEach((e) => {
                         html += `<p>${e}</p>`;
                     });
                 }
@@ -143,7 +164,7 @@
     }
 </script>
 
-<style type="text/css" lang="less" >
+<style type="text/css" lang="less">
     .app-componet-group {
         width: 100%;
         height: 100%;

@@ -1,5 +1,5 @@
 <template >
-    <section class="app-component-event" @mouseenter="()=>{this.isShowBtns=true;}" @mouseleave="()=>{this.isShowBtns=false;}" v-if="event">
+    <section class="app-component-event" :data-id="event.id" @mouseenter="()=>{this.isShowBtns=true;}" @mouseleave="()=>{this.isShowBtns=false;}" v-if="event">
         <p class="app-component-event-text" :data-priority="event.priority">{{event.text}}</p>
         <p class="other-info">
             {{readableCreateTime}}<span v-if="event.type==2">（{{statusText}}）</span>
