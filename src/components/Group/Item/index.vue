@@ -67,9 +67,21 @@
                 return this.user.id == this.group.user;
             }
         },
+        data() {
+            return {
+                curEventInfo: null,
+                curEventOriInfo: null,
+                isShowEventInfo: false,
+                events: {}
+            };
+        },
         mounted() {
             let group = this.group;
+            let _events = this.events;
             if (group && group.events) {
+                group.events.forEach((event)=> {
+                    _events[event.id] = event;
+                });
                 Sortable.create(this.$refs.groupBody, {
                     async onEnd(e) {
                         let children = e.from.children;
@@ -80,6 +92,7 @@
                                 id: eventId,
                                 index: i
                             });
+                            _events[eventId].index = i;
                         }
 
                         await EventApi.updateIndex({
@@ -88,13 +101,6 @@
                     }
                 })
             }
-        },
-        data() {
-            return {
-                curEventInfo: null,
-                curEventOriInfo: null,
-                isShowEventInfo: false
-            };
         },
         methods: {
             onRemoveEvent(event) {
@@ -142,6 +148,7 @@
                 if (result.retCode === "0000") {
                     let event = result.retData;
                     group.events.push(event);
+                    this.events[event.id] = event; // 加入缓存
                 } else {
                     this.$message.error(result.retMsg);
                 }
