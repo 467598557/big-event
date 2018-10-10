@@ -36,8 +36,7 @@ Loading.install(Vue);
 
 router.beforeEach(async (to ,from,  next)=> {
     let toPath = to.fullPath;
-    // || toPath != "/register"
-    if(toPath != "/login" && toPath != "/register") { // 检查权限
+    if(toPath != "/login" && toPath != "/register" && toPath != "/init") { // 检查权限
         let user = await store.dispatch("GetUserInfo").catch((result)=> {
             Message.error("系统内部错误");
         });
@@ -58,6 +57,7 @@ router.beforeEach(async (to ,from,  next)=> {
 
     next();
 });
+
 new Vue({
     el: '#app',
     store,

@@ -1,4 +1,5 @@
 import {GET} from './../utils/request';
+import {POST} from "../utils/request";
 
 export function getList(data) {
     return GET('/user/list', data);
@@ -30,4 +31,12 @@ export async function getUserInfo() {
 
 export async function logout() {
     return GET("/user/logout");
+}
+
+export async function init() {
+    return POST("/user/init");
+}
+
+export async function getInitStatus() {
+    return GET("/user/getInitStatus");
 }
