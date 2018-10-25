@@ -12,6 +12,7 @@
                     <el-radio-group v-model="event.type">
                         <el-radio :label="1">普通</el-radio>
                         <el-radio :label="2">任务</el-radio>
+                        <el-radio :label="3">MarkDown</el-radio>
                     </el-radio-group>
                 </div>
                 <div class="row" v-if="event.type==2">

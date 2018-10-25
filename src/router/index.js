@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import AppViewIndex from 'src/views/index'
 import AppViewInit from 'src/views/init'
+import AppCodeMirror from 'src/views/codemirror'
 import AppViewLogin from 'src/views/login'
 import AppViewRegister from 'src/views/register'
 import AppViewManager from 'src/views/manager'
@@ -28,6 +29,10 @@ const router = new Router({
             path: '/init',
             name: 'AppViewInit',
             component: AppViewInit
+        }, , {
+            path: '/code',
+            name: 'AppCodeMirror',
+            component: AppCodeMirror
         }, {
             path: '/manager',
             name: 'AppViewManager',

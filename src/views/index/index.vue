@@ -44,6 +44,9 @@
             :group="curGroupInfo"
             @onSaveSuccess="onGroupSaveSuccess"
             @onClose="onGroupInfoClose"></AppComponentGroupInfo>
+        <section class="md-container" :class="{in: isShowMarkdownInfo}">
+            <AppComponentMarkdown ></AppComponentMarkdown>
+        </section>
     </section>
 </template>
 
@@ -53,8 +56,10 @@
     import * as UserApi from 'src/api/user';
     import AppComponentHeader from 'src/components/Header';
     import AppComponentFooter from 'src/components/Footer';
+    import AppComponentMarkdown from 'src/components/Markdown/index';
     import AppComponentGroupItem from 'src/components/Group/Item';
     import AppComponentGroupInfo from 'src/components/Group/Info';
+
     import {MixinStoreUser} from 'src/store/mixin';
 
     export default {
@@ -63,7 +68,8 @@
             AppComponentGroupInfo,
             AppComponentGroupItem,
             AppComponentHeader,
-            AppComponentFooter
+            AppComponentFooter,
+            AppComponentMarkdown
         },
         mixins: [MixinStoreUser],
         data() {
@@ -71,6 +77,7 @@
                 curGroupInfo: null,
                 curGroupOriInfo: null,
                 isShowGroupInfo: false,
+                isShowMarkdownInfo: true,
                 groups: [],
                 users: []
             }
@@ -284,6 +291,34 @@
                 .group-list {
                     height: 500px;
                 }
+            }
+        }
+        .md-container {
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            left: 100%;
+            top: 0px;
+            z-index: 1100;
+            background: rgba(255, 255, 255, 1);
+            overflow: hidden;
+            -webkit-transition-duration: 200ms;
+            -moz-transition-duration: 200ms;
+            -ms-transition-duration: 200ms;
+            -o-transition-duration: 200ms;
+            transition-duration: 200ms;
+            -webkit-transition-property: left;
+            -moz-transition-property: left;
+            -ms-transition-property: left;
+            -o-transition-property: left;
+            transition-property: left;
+            iframe {
+                width: 100%;
+                height: 100%;
+                border: 0px;
+            }
+            &.in {
+                left: 0;
             }
         }
     }
