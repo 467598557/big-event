@@ -44,8 +44,8 @@
             :group="curGroupInfo"
             @onSaveSuccess="onGroupSaveSuccess"
             @onClose="onGroupInfoClose"></AppComponentGroupInfo>
-        <section class="md-container" :class="{in: isShowMarkdownInfo}">
-            <AppComponentMarkdown ></AppComponentMarkdown>
+        <section class="md-container" :class="{in: isMarkdownShow}">
+            <AppComponentMarkdown v-if="isMarkdownInited"></AppComponentMarkdown>
         </section>
     </section>
 </template>
@@ -60,7 +60,7 @@
     import AppComponentGroupItem from 'src/components/Group/Item';
     import AppComponentGroupInfo from 'src/components/Group/Info';
 
-    import {MixinStoreUser} from 'src/store/mixin';
+    import {MixinStoreUser, MixinStoreMarkdown} from 'src/store/mixin';
 
     export default {
         name: "AppViewIndex",
@@ -71,13 +71,12 @@
             AppComponentFooter,
             AppComponentMarkdown
         },
-        mixins: [MixinStoreUser],
+        mixins: [MixinStoreUser, MixinStoreMarkdown],
         data() {
             return {
                 curGroupInfo: null,
                 curGroupOriInfo: null,
                 isShowGroupInfo: false,
-                isShowMarkdownInfo: true,
                 groups: [],
                 users: []
             }

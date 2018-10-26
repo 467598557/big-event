@@ -7,3 +7,12 @@ export const MixinStoreUser = {
         })
     }   
 };
+
+export const MixinStoreMarkdown = {
+    computed: {
+        ...mapState({
+            isMarkdownShow: state => state.markdown.isShow,
+            isMarkdownInited: state => state.markdown.isInited
+        })
+    }
+};

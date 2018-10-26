@@ -4,6 +4,7 @@
         <p class="other-info">
             {{readableCreateTime}}<span v-if="event.type==2">（{{statusText}}）</span>
             <span class="btns" v-if="isCurUser" :class="{show:isShowBtns}">
+                <a href="javascript:void(0)" class="el-icon-edit" v-if="event.type==3"></a>
                 <a href="javascript:void(0)" @click="onShowEventInfo()" class="el-icon-setting"></a>
                 <a href="javascript:void(0)" @click="onRemoveEvent()" class="el-icon-circle-close-outline"></a>
             </span>
@@ -84,10 +85,10 @@
                 color: #F56C6C;
             }
         }
-        .el-icon-setting, .el-icon-circle-close-outline {
+        .el-icon-setting, .el-icon-circle-close-outline, .el-icon-edit {
             font-size: 20px;
         }
-        .el-icon-setting {
+        .el-icon-setting, .el-icon-edit {
             margin-right: 10px;
         }
         .other-info {
