@@ -1,27 +1,27 @@
-import * as UserApi from 'src/api/user'
-
 const markdown = {
+    namespaced: true,
     state: {
         isInited: false,
         isShow: false,
-        relatedId: null
+        relativedEvent: null
     },
     mutations: {
-        SHOW(state, relatedId) {
-            state.isShow = false;
-            state.relatedId = relatedId;
-        },
         HIDE(state) {
+            state.isShow = false;
+            this.relativedEvent = null;
+        },
+        SHOW(state, relativedEvent) {
             if (!state.isInited) {
                 state.isInited = true;
             }
 
+            state.relativedEvent = relativedEvent;
             state.isShow = true;
         }
     },
     actions: {
-        Show({state, commit}, relatedId) {
-            commit("SHOW", relatedId);
+        Show({state, commit}, relativedEvent) {
+            commit("SHOW", relativedEvent);
         },
         Hide({state, commit}) {
             commit("HIDE");

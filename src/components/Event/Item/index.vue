@@ -1,12 +1,14 @@
 <template >
-    <section class="app-component-event" :data-id="event.id" @mouseenter="()=>{this.isShowBtns=true;}" @mouseleave="()=>{this.isShowBtns=false;}" v-if="event">
-        <p class="app-component-event-text" :data-priority="event.priority">{{event.text}}</p>
+    <section class="app-component-event" :data-id="event.id"
+             @mouseenter="()=>{this.isShowBtns=true;}"
+             @mouseleave="()=>{this.isShowBtns=false;}" v-if="event">
+        <p class="app-component-event-text" :data-priority="event.priority">{{event.text}}({{getEventTypeText(event.type)}})</p>
         <p class="other-info">
             {{readableCreateTime}}<span v-if="event.type==2">（{{statusText}}）</span>
             <span class="btns" v-if="isCurUser" :class="{show:isShowBtns}">
-                <a href="javascript:void(0)" class="el-icon-edit" v-if="event.type==3"></a>
-                <a href="javascript:void(0)" @click="onShowEventInfo()" class="el-icon-setting"></a>
-                <a href="javascript:void(0)" @click="onRemoveEvent()" class="el-icon-circle-close-outline"></a>
+                <a href="javascript:void(0)" @click="onEditMarkdown" class="el-icon-edit" v-if="event.type==3"></a>
+                <a href="javascript:void(0)" @click="onShowEventInfo" class="el-icon-setting"></a>
+                <a href="javascript:void(0)" @click="onRemoveEvent" class="el-icon-circle-close-outline"></a>
             </span>
         </p>
     </section>
@@ -16,6 +18,7 @@
     import * as EventApi from 'src/api/event';
     import {timeSpanReadableString} from 'src/utils/time';
     import {MixinStoreUser} from 'src/store/mixin';
+    import {getTextByType} from 'src/utils/event';
 
     export default {
         name: "AppComponentEventItem",
@@ -52,6 +55,12 @@
         methods: {
             onShowEventInfo() {
                 this.$emit("onShowEventInfo", this.event);
+            },
+            onEditMarkdown() {
+                this.$store.dispatch("markdown/Show", this.event).catch(()=>{});
+            },
+            getEventTypeText(type) {
+                return getTextByType(type);
             },
             async onRemoveEvent() {
                 await EventApi.remove({

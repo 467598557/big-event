@@ -74,7 +74,7 @@
                         });
                     });
 
-                     user && this.$router.push("/");
+                     user && this.$router.push("/main");
                 });
             }
         }

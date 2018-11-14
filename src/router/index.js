@@ -2,18 +2,22 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import AppViewIndex from 'src/views/index'
 import AppViewInit from 'src/views/init'
-import AppCodeMirror from 'src/views/codemirror'
 import AppViewLogin from 'src/views/login'
 import AppViewRegister from 'src/views/register'
 import AppViewManager from 'src/views/manager'
 import AppViewManagerUser from 'src/views/manager/user'
 import AppViewManagerConfig from 'src/views/manager/config'
 import AppViewManagerInfo from 'src/views/manager/info'
+import AppViewTestSprtie from 'src/views/test/sprite.vue'
 
 Vue.use(Router)
 const router = new Router({
     routes: [
         {
+            path: '/',
+            name: 'AppViewLogin',
+            component: AppViewLogin
+        }, {
             path: '/login',
             name: 'AppViewLogin',
             component: AppViewLogin
@@ -22,17 +26,13 @@ const router = new Router({
             name: 'AppViewRegister',
             component: AppViewRegister
         }, {
-            path: '/',
+            path: '/main',
             name: 'AppViewIndex',
             component: AppViewIndex
         }, {
             path: '/init',
             name: 'AppViewInit',
             component: AppViewInit
-        }, , {
-            path: '/code',
-            name: 'AppCodeMirror',
-            component: AppCodeMirror
         }, {
             path: '/manager',
             name: 'AppViewManager',
@@ -54,6 +54,10 @@ const router = new Router({
                 name: 'AppViewManagerInfo',
                 component: AppViewManagerInfo
             }]
+        }, {
+            path: '/test/sprite',
+            name: 'AppViewTestSprtie',
+            component: AppViewTestSprtie
         }
     ]
 });

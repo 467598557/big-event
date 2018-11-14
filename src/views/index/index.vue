@@ -45,7 +45,10 @@
             @onSaveSuccess="onGroupSaveSuccess"
             @onClose="onGroupInfoClose"></AppComponentGroupInfo>
         <section class="md-container" :class="{in: isMarkdownShow}">
-            <AppComponentMarkdown v-if="isMarkdownInited"></AppComponentMarkdown>
+            <AppComponentMarkdown
+                    @onClose="onMarkdownClose" @onSubmitSuccess="onMarkdownSubmitSuccess"
+                    :is-show="isMarkdownShow"
+                    v-if="isMarkdownInited"></AppComponentMarkdown>
         </section>
     </section>
 </template>
@@ -214,6 +217,12 @@
                 let events = eventResult.retData;
 
                 user.groups = this.combileGroupsAndEvents(groups, events);
+            },
+            onMarkdownClose() {
+                this.$store.dispatch("markdown/Hide").catch(() => { });
+            },
+            onMarkdownSubmitSuccess() {
+                this.$store.dispatch("markdown/Hide").catch(() => { });
             }
         }
     }

@@ -24,3 +24,9 @@ export async function updateIndex(data) {
     return POST("/event/updateIndex", data);
 }
 
+export async function updateMarkdown(data) {
+    return POST("/event/updateMarkdown", data);
+}
+
+
+
