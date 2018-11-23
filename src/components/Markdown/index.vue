@@ -33,6 +33,7 @@
         watch: {
             async isShow() {
                 if(this.isShow) {
+                    this.editor.setValue("");
                     this.getMarkdownAndRender();
                 } else {
                     this.editor.setValue("");

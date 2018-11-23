@@ -3,7 +3,12 @@ const markdown = {
     state: {
         isInited: false,
         isShow: false,
-        relativedEvent: null
+        relativedEvent: null,
+        preview: {
+            isShow: false,
+            isInited: false,
+            relativedEvent: null
+        }
     },
     mutations: {
         HIDE(state) {
@@ -17,6 +22,18 @@ const markdown = {
 
             state.relativedEvent = relativedEvent;
             state.isShow = true;
+        },
+        SHOW_PREVIEW(state, relativedEvent) {
+            if (!state.preview.isInited) {
+                state.preview.isInited = true;
+            }
+
+            state.preview.relativedEvent = relativedEvent;
+            state.preview.isShow = true;
+        },
+        HIDE_PREVIEW(state) {
+            state.preview.isShow = false;
+            state.preview.relativedEvent = null;
         }
     },
     actions: {
@@ -25,6 +42,12 @@ const markdown = {
         },
         Hide({state, commit}) {
             commit("HIDE");
+        },
+        ShowPreview({state, commit}, relativedEvent) {
+            commit("SHOW_PREVIEW", relativedEvent);
+        },
+        HidePreview({state, commit}) {
+            commit("HIDE_PREVIEW");
         }
     }
 };

@@ -30,13 +30,14 @@ Vue.use(Row);
 Vue.use(Dropdown);
 Vue.use(DropdownItem);
 Vue.use(DropdownMenu);
+Vue.prototype.$alert = MessageBox.alert;
 Vue.prototype.$confirm = MessageBox.confirm;
 Vue.prototype.$message = Message;
 Loading.install(Vue);
 
 router.beforeEach(async (to ,from,  next)=> {
     let toPath = to.fullPath;
-    if(toPath != "/login" && toPath != "/register" && toPath != "/init") { // 检查权限
+    if(toPath != "/" && toPath != "/login" && toPath != "/register" && toPath != "/init") { // 检查权限
         let user = await store.dispatch("GetUserInfo").catch((result)=> {
             Message.error("系统内部错误");
         });

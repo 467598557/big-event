@@ -5,11 +5,11 @@
         <h3 class="title">系统登录</h3>
         <el-form-item prop="name">
             <el-input type="text" v-model="ruleForm.name" auto-complete="off"
-                      placeholder="账号"></el-input>
+                      placeholder="账号" @keyup.enter.native="doLogin"></el-input>
         </el-form-item>
         <el-form-item prop="password">
             <el-input type="password" v-model="ruleForm.password" auto-complete="off"
-                      placeholder="密码"></el-input>
+                      placeholder="密码" @keyup.enter.native="doLogin"></el-input>
         </el-form-item>
         <!--<div class="row">-->
         <el-checkbox v-model="checked" checked class="remember">记住密码</el-checkbox>
@@ -20,6 +20,7 @@
                        @click.native.prevent="handleSubmit" :loading="logining">登录
             </el-button>
         </el-form-item>
+        <div class="use-des-btn"><a @click="showUserDes" href="javascript:void(0)" >使用说明</a></div>
     </el-form>
 </template>
 
@@ -32,8 +33,8 @@
             return {
                 logining: false,
                 ruleForm: {
-                    name: '测试',
-                    password: '123456'
+                    name: localStorage.getItem("name") || '',
+                    password: localStorage.getItem("password") || '123456'
                 },
                 rules: {
                     name: [
@@ -50,7 +51,7 @@
             handleReset() {    
                 this.$refs.ruleForm.resetFields();
             },
-            onKeyUp(e) {
+            doLogin(e) {
                 if(e.keyCode != 13) {
                     return;
                 }
@@ -74,7 +75,23 @@
                         });
                     });
 
-                     user && this.$router.push("/main");
+                    localStorage.setItem("password", user.password);
+                    localStorage.setItem("name", user.name);
+                    user && this.$router.push("/main");
+                });
+            },
+            showUserDes() {
+                let content = `
+                <ol >
+                    <li>该工具为增强型记事本。</li>
+                    <li>可以根据类型记录不同事件。</li>
+                    <li>可以为事件编辑优先级。</li>
+                    <li>支持低版本的任务状态处理。</li>
+                    <li>可以在线编辑markdown文件。</li>
+                </ol>`;
+                this.$alert(content, '使用说明', {
+                    confirmButtonText: '确定',
+                    dangerouslyUseHTMLString: true
                 });
             }
         }
@@ -103,6 +120,10 @@
         .register-btn {
             float: right;
             font-size: 14px;
+        }
+        .use-des-btn {
+            text-align: center;
+            font-size: 12px;
         }
     }
 </style>

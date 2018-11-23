@@ -23,6 +23,11 @@
                 width="180">
             </el-table-column>
             <el-table-column
+                prop="alias"
+                label="名字"
+                width="180">
+            </el-table-column>
+            <el-table-column
                 prop="password"
                 label="密码">
             </el-table-column>
@@ -85,6 +90,7 @@
             async onAddAndEditUser() {
                 let result = await UserApi.add({
                     name: "新建用户",
+                    alias: "新建用户",
                     password: "123456",
                     type: UserType.User.id
                 });

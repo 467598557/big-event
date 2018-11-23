@@ -19,6 +19,7 @@
             <AppComponentEventItem :key="event.id" v-for="event in group.events" :event="event"
                                    @onRemoveEvent="onRemoveEvent"
                                    @onShowEventInfo="onShowEventInfo"
+                                   @onPreviewMarkdown="onPreviewMarkdown"
             ></AppComponentEventItem>
         </div>
         <AppComponentEventInfo
@@ -117,6 +118,9 @@
                 this.curEventInfo = Object.assign({}, item);
                 this.curEventOriInfo = item;
                 this.isShowEventInfo = true;
+            },
+            onPreviewMarkdown(item) {
+                this.$emit("onPreviewMarkdown", item, this.group);
             },
             onEventInfoClose() {
                 this.isShowEventInfo = false;

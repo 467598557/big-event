@@ -6,7 +6,10 @@
                 <a href="javascript:void(0)" @click="onClose" class="el-icon-close"></a>
             </header>
             <div class="app-component-user-info-content-body">
-                <el-input v-model="user.name" placeholder="请输入账号昵称"></el-input>
+                <el-input v-model="user.name" placeholder="请输入账号"></el-input>
+                <div class="row">
+                    <el-input v-model="user.alias" placeholder="请输入昵称"></el-input>
+                </div>
                 <div class="row">
                     <el-input v-model="user.password" placeholder="请输入账号密码"></el-input>
                 </div>
@@ -48,7 +51,7 @@
             },
             async onSave() {
                 let user = this.user;
-                if(!user.password || !user.name) {
+                if(!user.password || !user.name || !user.alias) {
                     this.$message.error("请填写完整信息");
                     return;
                 }
@@ -73,7 +76,7 @@
         .fix-window-shader;
         &-content {
             width: 560px;
-            height: 325px;
+            height: 365px;
             margin-left: -280px;
             margin-top: -150px;
             &-body {

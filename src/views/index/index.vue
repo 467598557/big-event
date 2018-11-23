@@ -18,7 +18,7 @@
             <ul >
                 <li class="user" v-for="userItem in users">
                     <p class="user-title" :class="{active:userItem.isCollapse}" @click="toggleUserCollapse(userItem)">
-                        {{userItem.name}}
+                        {{userItem.alias || userItem.name}}
                         <i v-if="!userItem.isCollapse" class="el-icon-arrow-down"></i>
                         <i v-if="userItem.isCollapse" class="el-icon-arrow-up"></i>
                     </p>
@@ -29,6 +29,7 @@
                                 :isCollapse="item.status==2"
                                 @onShowInfo="onShowGroupInfo"
                                 @onRemove="onRemoveGroup"
+                                @onPreviewMarkdown="onPreviewMarkdown"
                             ></AppComponentGroupItem>
                         </li>
                     </ul>
@@ -50,6 +51,12 @@
                     :is-show="isMarkdownShow"
                     v-if="isMarkdownInited"></AppComponentMarkdown>
         </section>
+        <section class="md-preview-container" :class="{in: isMarkdownPreviewShow}">
+            <AppComponentMarkdownPreview
+                    @onClose="onMarkdownPreviewClose"
+                    :is-show="isMarkdownPreviewShow"
+                    v-if="isMarkdownPreviewInited"></AppComponentMarkdownPreview>
+        </section>
     </section>
 </template>
 
@@ -60,6 +67,7 @@
     import AppComponentHeader from 'src/components/Header';
     import AppComponentFooter from 'src/components/Footer';
     import AppComponentMarkdown from 'src/components/Markdown/index';
+    import AppComponentMarkdownPreview from 'src/components/Markdown/Preview/index';
     import AppComponentGroupItem from 'src/components/Group/Item';
     import AppComponentGroupInfo from 'src/components/Group/Info';
 
@@ -72,7 +80,8 @@
             AppComponentGroupItem,
             AppComponentHeader,
             AppComponentFooter,
-            AppComponentMarkdown
+            AppComponentMarkdown,
+            AppComponentMarkdownPreview
         },
         mixins: [MixinStoreUser, MixinStoreMarkdown],
         data() {
@@ -221,8 +230,13 @@
             onMarkdownClose() {
                 this.$store.dispatch("markdown/Hide").catch(() => { });
             },
+            onMarkdownPreviewClose() {
+                this.$store.dispatch("markdown/HidePreview").catch(() => { });
+            },
             onMarkdownSubmitSuccess() {
-                this.$store.dispatch("markdown/Hide").catch(() => { });
+            },
+            onPreviewMarkdown(item, group) {
+                console.log(item);
             }
         }
     }
@@ -301,7 +315,7 @@
                 }
             }
         }
-        .md-container {
+        .md-container, .md-preview-container {
             width: 100%;
             height: 100%;
             position: fixed;

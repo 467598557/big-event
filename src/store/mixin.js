@@ -12,7 +12,9 @@ export const MixinStoreMarkdown = {
     computed: {
         ...mapState({
             isMarkdownShow: state => state.markdown.isShow,
-            isMarkdownInited: state => state.markdown.isInited
+            isMarkdownPreviewShow: state => state.markdown.preview.isShow,
+            isMarkdownInited: state => state.markdown.isInited,
+            isMarkdownPreviewInited: state => state.markdown.preview.isInited
         })
     }
 };

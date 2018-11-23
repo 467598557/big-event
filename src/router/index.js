@@ -8,7 +8,6 @@ import AppViewManager from 'src/views/manager'
 import AppViewManagerUser from 'src/views/manager/user'
 import AppViewManagerConfig from 'src/views/manager/config'
 import AppViewManagerInfo from 'src/views/manager/info'
-import AppViewTestSprtie from 'src/views/test/sprite.vue'
 
 Vue.use(Router)
 const router = new Router({
@@ -54,10 +53,6 @@ const router = new Router({
                 name: 'AppViewManagerInfo',
                 component: AppViewManagerInfo
             }]
-        }, {
-            path: '/test/sprite',
-            name: 'AppViewTestSprtie',
-            component: AppViewTestSprtie
         }
     ]
 });

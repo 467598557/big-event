@@ -1,7 +1,7 @@
 import axios from 'axios'
 import {MessageBox, Message} from 'element-ui'
 
-const host = process.env.NODE_ENV === "development" ? "http://localhost:7001/" : "http://demo.com/7001/";
+const host = process.env.NODE_ENV === "development" ? "http://localhost:7001/" : "http://web.bcbook.cn:7001/";
 const service = axios.create({
     baseURL: host,
     timeout: 5000,

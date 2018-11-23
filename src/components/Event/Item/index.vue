@@ -10,6 +10,9 @@
                 <a href="javascript:void(0)" @click="onShowEventInfo" class="el-icon-setting"></a>
                 <a href="javascript:void(0)" @click="onRemoveEvent" class="el-icon-circle-close-outline"></a>
             </span>
+            <span class="btns show" v-else>
+                <a href="javascript:void(0)" v-if="event.type==3" @click="onPreviewMarkdown" class="el-icon-view"></a>
+            </span>
         </p>
     </section>
 </template>
@@ -69,6 +72,10 @@
                 });
 
                 this.$emit("onRemoveEvent", this.event);
+            },
+            onPreviewMarkdown() {
+                // this.$emit("onPreviewMarkdown", this.event);
+                this.$store.dispatch("markdown/ShowPreview", this.event).catch(()=>{});
             }
         }
     }
@@ -94,7 +101,7 @@
                 color: #F56C6C;
             }
         }
-        .el-icon-setting, .el-icon-circle-close-outline, .el-icon-edit {
+        .el-icon-setting, .el-icon-circle-close-outline, .el-icon-edit, .el-icon-view {
             font-size: 20px;
         }
         .el-icon-setting, .el-icon-edit {
